@@ -1,0 +1,11 @@
+trigger callOutTrigger on Contact (after insert, after update) {
+    switch on Trigger.OperationType{
+        when AFTER_INSERT {
+            CalloutTriggerHelperClass.insertCallOutClass(trigger.new);
+        }
+        when AFTER_UPDATE {
+            CalloutTriggerHelperClass.insertCallOutClass(trigger.new);
+        }
+        
+    }
+}
