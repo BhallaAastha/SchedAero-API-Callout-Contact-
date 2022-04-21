@@ -1,0 +1,194 @@
+global class CalloutTriggerHelperClass {
+    global static void insertCallOutClass(list<Contact>cList){
+        RootObject objJSONRoot = new RootObject();
+        for(contact c : cList){
+            
+            objJSONRoot.Id = c.Id;
+            objJSONRoot.first=c.FirstName;
+            //      objJSONRoot.middle=c.middle;
+            objJSONRoot.last=c.LastName;
+            objJSONRoot.phone=c.Phone;
+            objJSONRoot.email=c.Email;
+            objJSONRoot.fax=c.Fax;
+        }
+        /*  objJSONRoot.vatNumber=c.vatNumber;
+objJSONRoot.gender=c.gender;
+objJSONRoot.isSharedCustomer=c.isSharedCustomer;
+objJSONRoot.isSharedPassenger=c.isSharedPassenger;
+objJSONRoot.salespersonId=c.salespersonId;
+objJSONRoot.contactCompanyId=c.contactCompanyId;
+objJSONRoot.dateOfBirth=c.dateOfBirth;
+objJSONRoot.note=note;
+objJSONRoot.emergency=emergency;
+objJSONRoot.weight=weight;
+objJSONRoot.address=address;
+objJSONRoot.identityDocs=identityDocs;
+
+}
+
+cls_notes note = new cls_notes(); 
+for(contact c : cList){
+note.general = c.general;
+note.catering=c.catering;
+note.transportation=c.transportation;
+note.lodging=c.lodging;
+note.aircraft=c.aircraft;
+note.handling=c.handling;
+note.pilotTripSheet=c.pilotTripSheet;
+}
+
+cls_emergencyContact emergency = new cls_emergencyContact();
+for(Contact c :cList){
+emergency.firstName = c.firstName;
+emergency.lastName = c.lastName;
+emergency.relationship = c.relationship;
+emergency.phone = c.phone;
+emergency.email =c.email;
+}
+
+cls_weight weight = new cls_weight();
+for(Contact c :cList){
+weight.unit = c.weight;
+weight.amount = c.amount;
+}
+
+cls_addresses address = new cls_addresses();
+for(contact c : conList){ 
+address.id=c.id;
+address.name= c.name;
+address.isPermanent=c.isPermanent;
+address.line1=c.line1;
+address.line2=c.line2;
+address.postbox=c.postbox;
+address.city=c.city;
+address.postalCode=c.postalCode;
+address.provinceCode=c.provinceCode;
+address.countryCode=c.countryCode;
+}
+
+cls_identificationDocuments identityDocs = new cls_identificationDocuments();
+for(contact c : conList){   
+identityDocs.id=c.id;
+identityDocs.fileId=c.fileId;
+identityDocs.documentType=c.documentType;
+identityDocs.number_X=c.number_X;
+identityDocs.authority=c.authority;
+identityDocs.first=c.first;
+identityDocs.middle=c.middle;
+identityDocs.last=c.last;
+identityDocs.issueDate=c.issueDate;
+identityDocs.issuingProvinceCode=c.issuingProvinceCode;
+identityDocs.issuingCountryCode=c.issuingCountryCode;
+identityDocs.expirationDate=c.expirationDate;
+identityDocs.note=c.note;
+}*/
+        
+        
+        
+        system.debug('data======= '+objJSONRoot );
+        string body = JSON.serialize(objJSONRoot);
+        system.debug('===============> '+body);
+        callOutPostMethod(body);
+    }
+    
+    public class RootObject{
+        public string Id {get;set;}
+        public String first{get;set;}
+        //  public String middle{get;set;}
+        public String last{get;set;} 
+        public String phone{get;set;}	
+        public String email{get;set;}	
+        public String fax{get;set;}	
+    }
+    /* public String vatNumber{get;set;}	
+public String gender{get;set;}	
+public boolean isSharedCustomer{get;set;}
+public boolean isSharedPassenger{get;set;}
+public cls_notes note {get;set;}
+public cls_emergencyContact emergency {get;set;}
+public String salespersonId{get;set;}	
+public String contactCompanyId{get;set;}
+public cls_weight weight {get;set;}
+public String dateOfBirth{get;set;}
+public cls_addresses address {get;set;}
+public cls_identificationDocuments identityDocs {get;set;}
+}
+
+class cls_notes {
+public String general{get;set;}
+public String catering{get;set;}	
+public String transportation{get;set;}	
+public String lodging{get;set;}	
+public String aircraft{get;set;}	
+public String handling{get;set;}	
+public String pilotTripSheet{get;set;}	
+}
+class cls_emergencyContact {
+public String firstName{get;set;}	
+public String lastName{get;set;}	
+public String relationship{get;set;}
+public String phone{get;set;}	
+public String email{get;set;}	
+}
+
+class cls_weight {
+public String unit{get;set;}	
+public Integer amount{get;set;}
+}
+
+class cls_addresses {
+public String id{get;set;}	
+public String name{get;set;}
+public boolean isPermanent{get;set;}
+public String line1{get;set;}	
+public String line2{get;set;}	
+public String postbox{get;set;}	
+public String city{get;set;}	
+public String postalCode{get;set;}	
+public String provinceCode{get;set;}	
+public String countryCode{get;set;}	
+}
+
+class cls_identificationDocuments {
+public String id{get;set;}	
+public String fileId{get;set;}	
+public String documentType{get;set;}	
+public String number_X{get;set;}	
+public String authority{get;set;}	
+public String first{get;set;}	
+public String middle{get;set;}	
+public String last{get;set;}	
+public String issueDate{get;set;}	
+public String issuingProvinceCode{get;set;}	
+public String issuingCountryCode{get;set;}	
+public String expirationDate{get;set;}	
+public String note{get;set;}	
+}*/
+    
+    // if callout has to be done from same class
+    @future(callout=true)
+    global static void callOutPostMethod(string body){
+        
+        HttpRequest req = new HttpRequest();
+        string testing = string.valueOf(system.now());
+        req.setHeader('X-Avinode-SentTimestamp', testing);
+        req.setHeader('X-Avinode-ApiToken','229B8C9E-B3F2-4FA6-8BAE-71DF00943C0E');
+        req.setEndpoint('https://sandbox.avinode.com/contacts/people');
+        req.setMethod('POST');
+        req.setBody(body);
+        system.debug('request is '+req.getBody());
+        
+        try {
+            HTTP h = new HTTP();
+            HTTPResponse res = h.send(req);
+            system.debug('response is '+res);
+            if(res.getStatusCode()==200){
+                system.debug('Successfull');
+            }
+        }
+        catch(exception ex){
+            throw ex;
+        }
+        
+    }
+}
